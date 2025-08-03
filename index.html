@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Professional Chatbot UI with Plus Button & Responsive Design</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Light theme (default) */
+    :root {
+      --bg-color: #fff;
+      --text-color: #222;
+      --panel-bg: #fff;
+      --shadow-color: rgba(40, 40, 40, 0.09);
+      --sidebar-bg: #fff;
+      --sidebar-text: #222;
+      --sidebar-hover: #f3f6fa;
+      --btn-success-bg: #2ecc71;
+      --btn-secondary-bg: #6c63ff;
+      --btn-outline-bg: #fcfcfc;
+      --input-bg: #f6f6f6;
+      --input-text: #222;
+      --mic-color: #909090;
+      --footer-text: #999;
+      --plus-btn-bg: #6c63ff;
+      --plus-btn-hover-bg: #574fff;
+      --plus-option-bg: #555;
+      --plus-option-hover-bg: #333;
+      --plus-option-text: #fff;
+    }
+
+    /* Dark theme override */
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #eee;
+      --panel-bg: #1e1e1e;
+      --shadow-color: rgba(0, 0, 0, 0.8);
+      --sidebar-bg: #262626;
+      --sidebar-text: #eee;
+      --sidebar-hover: #333;
+      --btn-success-bg: #27ae60;
+      --btn-secondary-bg: #7645d5;
+      --btn-outline-bg: #333;
+      --input-bg: #333;
+      --input-text: #eee;
+      --mic-color: #bbb;
+      --footer-text: #aaa;
+      --plus-btn-bg: #6c63ff;
+      --plus-btn-hover-bg: #574fff;
+      --plus-option-bg: #888;
+      --plus-option-hover-bg: #aaa;
+      --plus-option-text: #222;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Sidebar Drawer */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 280px;
+      height: 100vh;
+      background: var(--sidebar-bg);
+      box-shadow: 2px 0 12px 0 rgba(0, 0, 0, 0.11);
+      z-index: 1200;
+      transition: left 0.2s cubic-bezier(0.5, 1, 0.89, 1);
+      display: flex;
+      flex-direction: column;
+      color: var(--sidebar-text);
+    }
+    .sidebar.open {
+      left: 0;
+    }
+    .sidebar-header {
+      padding: 24px 16px 10px 24px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--sidebar-hover);
+    }
+    .sidebar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .sidebar-list li {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--sidebar-hover);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .sidebar-list li:hover {
+      background: var(--sidebar-hover);
+    }
+    .sidebar-footer {
+      padding: 16px 24px;
+      font-size: 0.96rem;
+      color: var(--footer-text);
+      border-top: 1px solid var(--sidebar-hover);
+    }
+
+    /* Floating Menu Button */
+    .menu-btn {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      z-index: 1999;
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: #f4f4f4;
+      box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.09);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      color: #444;
+    }
+    .menu-btn:hover {
+      background: #eaeaea;
+    }
+    body.dark .menu-btn {
+      background: #333;
+      color: #eee;
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.8);
+    }
+    body.dark .menu-btn:hover {
+      background: #444;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle-btn {
+      position: fixed;
+      top: 26px;
+      right: 26px;
+      z-index: 2000;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: #f4f4f4;
+      box-shadow: 0 2px 12px 0 rgba(60, 60, 60, 0.09);
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      color: #444;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .theme-toggle-btn:hover {
+      background: #eaeaea;
+    }
+    body.dark .theme-toggle-btn {
+      background: #333;
+      color: #eee;
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.8);
+    }
+    body.dark .theme-toggle-btn:hover {
+      background: #444;
+    }
+
+    /* Center Chat Panel */
+    .center-panel {
+      min-width: 310px;
+      max-width: 450px;
+      margin: 80px auto 80px auto;
+      background: var(--panel-bg);
+      border-radius: 20px;
+      box-shadow: 0 2px 12px var(--shadow-color);
+      padding: 32px 20px 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+    }
+    .chat-header {
+      font-size: 1.45rem;
+      font-weight: 600;
+      margin-bottom: 26px;
+      text-align: center;
+      margin-top: 18px;
+    }
+    .chat-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 26px;
+      max-width: 100%;
+    }
+    .main-btn {
+      padding: 10px 18px;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.16s, color 0.16s;
+      color: #fff;
+      min-width: 100px;
+      flex-grow: 1;
+      max-width: 140px;
+      box-sizing: border-box;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .success {
+      background: var(--btn-success-bg);
+    }
+    .secondary {
+      background: var(--btn-secondary-bg);
+    }
+    .outline {
+      background: var(--btn-outline-bg);
+      color: #404040;
+      border: 1px solid #ddd;
+    }
+    .outline:hover {
+      background: #f1f1f1;
+    }
+    body.dark .outline {
+      background: var(--btn-outline-bg);
+      color: #ccc;
+      border: 1px solid #555;
+    }
+    body.dark .outline:hover {
+      background: #444;
+    }
+
+    .input-area {
+      margin-top: 15px;
+      background: var(--input-bg);
+      border-radius: 10px;
+      padding: 8px 6px;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
+    }
+    .input-area input {
+      width: 88%;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 1.1rem;
+      padding: 8px 8px;
+      color: var(--input-text);
+    }
+    .input-area input::placeholder {
+      color: #888;
+    }
+    .mic-btn {
+      border: none;
+      background: transparent;
+      font-size: 1.43rem;
+      color: var(--mic-color);
+      cursor: pointer;
+    }
+
+    /* Chatbot response area */
+    .chat-response {
+      margin-top: 12px;
+      min-height: 30px;
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: var(--text-color);
+      text-align: center;
+      user-select: none;
+      padding: 4px 10px;
+      border-radius: 10px;
+      background: var(--input-bg);
+      max-width: 420px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      box-sizing: border-box;
+    }
+
+    /* Plus button container */
+    .plus-container {
+      position: fixed;
+      bottom: 32px;
+      right: 28px;
+      z-index: 2100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .plus-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: var(--plus-btn-bg);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+      color: #fff;
+      font-size: 2.6rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+    .plus-btn:hover {
+      background: var(--plus-btn-hover-bg);
+    }
+    body.dark .plus-btn {
+      background: var(--plus-btn-bg);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    body.dark .plus-btn:hover {
+      background: var(--plus-btn-hover-bg);
+    }
+
+    /* Plus option buttons */
+    .plus-options {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 6px;
+      width: max-content;
+    }
+    .plus-options.show {
+      display: flex;
+    }
+    .plus-option-btn {
+      padding: 8px 14px;
+      border-radius: 14px;
+      background: var(--plus-option-bg);
+      color: var(--plus-option-text);
+      font-size: 0.9rem;
+      border: none;
+      cursor: default; /* Not functional */
+      user-select: none;
+      white-space: nowrap;
+      transition: background 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+    .plus-option-btn:hover {
+      background: var(--plus-option-hover-bg);
+    }
+    body.dark .plus-option-btn {
+      background: var(--plus-option-bg);
+      color: var(--plus-option-text);
+      box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+    }
+    body.dark .plus-option-btn:hover {
+      background: var(--plus-option-hover-bg);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .center-panel {
+        margin: 60px 12px 80px 12px;
+        max-width: calc(100vw - 40px);
+        padding: 24px 16px 24px 16px;
+      }
+      .main-btn {
+        min-width: auto;
+        max-width: 45vw;
+        flex-grow: 1;
+        font-size: 0.95rem;
+      }
+      .input-area {
+        max-width: 100vw;
+      }
+      .chat-response {
+        max-width: 100vw;
+        font-size: 1rem;
+      }
+      .plus-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 2rem;
+      }
+      .plus-option-btn {
+        font-size: 0.85rem;
+        padding: 7px 12px;
+      }
+      .menu-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+      }
+      .theme-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Drawer -->
+  <nav id="sidebar" class="sidebar" aria-label="Sidebar">
+    <div class="sidebar-header">Chats</div>
+    <ul class="sidebar-list">
+      <li>Image generation prompt</li>
+      <li>Image generation prompt</li>
+      <li>Giant Water Bottle CGI</li>
+      <li>Image prompt creation</li>
+      <li>AI speech summary</li>
+      <li>Game name ideas</li>
+      <li>Game description writing</li>
+      <li>Fire Ice Tic Tac Toe</li>
+      <li>Tic tac toe variations</li>
+    </ul>
+    <div class="sidebar-footer">Mustafa Upworkwala</div>
+  </nav>
+
+  <!-- Floating Menu Button -->
+  <button id="menuBtn" class="menu-btn" aria-label="Open Menu" title="Open Menu">&#9776;</button>
+
+  <!-- Dark/Light Theme toggle -->
+  <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Dark/Light Theme" title="Toggle Theme">🌙</button>
+
+  <!-- Plus button and options container -->
+  <div class="plus-container" aria-label="Add options">
+    <button id="plusBtn" class="plus-btn" aria-expanded="false" aria-controls="plusOptions" aria-haspopup="true" aria-label="Add options" title="Add options">+</button>
+    <div id="plusOptions" class="plus-options" role="menu" aria-hidden="true">
+      <button class="plus-option-btn" role="menuitem" tabindex="-1">Add image</button>
+      <button class="plus-option-btn" role="menuitem" tabindex="-1">Add video</button>
+    </div>
+  </div>
+
+  <!-- Main Chat Area -->
+  <main class="center-panel" role="main">
+    <div class="chat-header">What can I help with?</div>
+    <div class="chat-actions" role="group" aria-label="Chat action buttons">
+      <button class="main-btn success" type="button">Create image</button>
+      <button class="main-btn secondary" type="button">Help me write</button>
+      <button class="main-btn outline" type="button">Code</button>
+      <button class="main-btn outline" type="button">More</button>
+    </div>
+    <div class="input-area">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Ask anything"
+        aria-label="Chat input"
+        autocomplete="off"
+      />
+      <button class="mic-btn" aria-label="Voice Input" type="button">&#127908;</button>
+    </div>
+    <div id="chatResponse" class="chat-response" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const themeToggle = document.getElementById('themeToggle');
+    const chatInput = document.getElementById('chatInput');
+    const chatResponse = document.getElementById('chatResponse');
+    const plusBtn = document.getElementById('plusBtn');
+    const plusOptions = document.getElementById('plusOptions');
+
+    // Toggle sidebar visibility
+    menuBtn.addEventListener('click', (e) => {
+      sidebar.classList.add('open');
+      e.stopPropagation();
+    });
+
+    // Close sidebar when clicking outside it
+    document.addEventListener('click', (e) => {
+      if (sidebar.classList.contains('open')) {
+        if (!sidebar.contains(e.target) && e.target !== menuBtn) {
+          sidebar.classList.remove('open');
+        }
+      }
+      // Also close plus options if clicking outside
+      if (plusOptions.classList.contains('show')) {
+        if (!plusOptions.contains(e.target) && e.target !== plusBtn) {
+          togglePlusOptions(false);
+        }
+      }
+    });
+
+    // Close sidebar with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "Escape") {
+        sidebar.classList.remove('open');
+        togglePlusOptions(false);
+      }
+    });
+
+    // Toggle dark/light theme
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      // Update button icon
+      if (document.body.classList.contains('dark')) {
+        themeToggle.textContent = '☀️';
+      } else {
+        themeToggle.textContent = '🌙';
+      }
+    });
+
+    // Simple chatbot reply logic
+    function getChatbotReply(input) {
+      const msg = input.trim().toLowerCase();
+      if (msg === 'hello') return 'Hi';
+      if (msg === 'who made you') return 'Mustafa the great';
+      return ''; // no reply for any other text
+    }
+
+    // On enter key press in chat input
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const userMessage = chatInput.value.trim();
+        if (!userMessage) return;
+
+        const reply = getChatbotReply(userMessage);
+
+        if (reply) {
+          chatResponse.textContent = reply;
+        } else {
+          chatResponse.textContent = '';
+        }
+        chatInput.value = '';
+      }
+    });
+
+    // Toggle plus options visibility
+    function togglePlusOptions(show) {
+      if (show) {
+        plusOptions.classList.add('show');
+        plusBtn.setAttribute('aria-expanded', 'true');
+        plusOptions.setAttribute('aria-hidden', 'false');
+      } else {
+        plusOptions.classList.remove('show');
+        plusBtn.setAttribute('aria-expanded', 'false');
+        plusOptions.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    plusBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isShown = plusOptions.classList.contains('show');
+      togglePlusOptions(!isShown);
+    });
+
+    // Accessibility: close plus options with Escape
+    plusOptions.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        togglePlusOptions(false);
+        plusBtn.focus();
+      }
+    });
+  </script>
+</body>
+</html>
